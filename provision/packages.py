@@ -95,6 +95,9 @@ if __name__ == "__main__":
         "zlib1g-dev",
     )
 
+    run(["pip3", "install", "pip", "--upgrade"])
+    run(["pip", "install", "-r", f"{here}/requirements.txt"])
+
     # Development libraries
     cmake(git_checkout(f"git@{host}:emil-e/rapidcheck", "d9482c6"))
     configure_make(
@@ -122,3 +125,13 @@ if __name__ == "__main__":
     makedirs("/usr/local/share/minizinc/solvers")
     for solver in ["chuffed", "gecode"]:
         copy(here / f"{solver}.msc", f"/usr/local/share/minizinc/solvers/{solver}.msc")
+
+    # Install the tasks service
+    copy(here / "../tasks/task-subscriber.py", f"/usr/local/bin/task-subscriber.py")
+    copy(
+        here / "../tasks/task-subscriber.service",
+        "/etc/systemd/system/task-subscriber.service",
+    )
+    run(["systemctl", "daemon-reload"])
+    run(["systemctl", "enable", "task-subscriber"])
+    run(["systemctl", "restart", "task-subscriber"])
