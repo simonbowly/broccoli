@@ -1,6 +1,7 @@
 from hashlib import md5
 from os import makedirs, remove
 from pathlib import Path
+from shutil import copy
 from subprocess import check_call
 from sys import argv
 
@@ -118,5 +119,6 @@ if __name__ == "__main__":
         git_checkout(f"git@{host}:MiniZinc/libminizinc", "2.3.2"),
         flags=["-DUSE_PROPRIETARY=on"],
     )
+    makedirs("/usr/local/share/minizinc/solvers")
     for solver in ["chuffed", "gecode"]:
-        copy(here / f"{solver}.msc", "/usr/local/share/minizinc/solvers/")
+        copy(here / f"{solver}.msc", f"/usr/local/share/minizinc/solvers/{solver}.msc")
