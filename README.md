@@ -24,3 +24,9 @@ The core component is a worker node service which:
 1. Maintains the configuration of the worker (i.e. required software versions installed and configured)
 1. Keeps itself in a state requested by the supervisor (i.e. runs a specified service)
 1. Reports its current state and usage metrics
+
+## Service Setup
+
+Just run this!
+
+    curl -fsSL http://192.168.1.101/source/install-broccoli.sh | bash
