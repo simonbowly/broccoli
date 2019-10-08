@@ -78,6 +78,7 @@ class StatusPublisher:
 async def run(context, control_address, status_address):
     control_subscriber = utils.simple_subscriber(context, control_address)
     status_publisher = StatusPublisher(context, status_address)
+    await asyncio.sleep(1)
     # Get all external software up to date and kick off the idle task.
     await jobs.update_required_software(status_publisher)
     required_state, current_state, task = restore_to_idle()

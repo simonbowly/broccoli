@@ -1,6 +1,7 @@
 import asyncio
 import zmq
 
+
 async def cancel(task):
     task.cancel()
     try:
@@ -20,6 +21,7 @@ async def fast_forward(socket):
         else:
             assert msg is not None
             return msg
+
 
 def simple_subscriber(context, address):
     socket = context.socket(zmq.SUB)

@@ -1,5 +1,3 @@
-
-
 import msgpack
 
 """
@@ -13,6 +11,7 @@ Controller messages:
     "task": {"name": "xxxxxx", "kwargs": {"k": "v"}},
 }
 """
+
 
 def decode_control(msg):
     decoded = msgpack.unpackb(msg, raw=False)
