@@ -10,10 +10,10 @@ async def run(cmd):
 
 
 async def update_and_restart(commit, status_publisher):
-    status_publisher.send_heartbeat({"state": f"updating to {commit}"})
+    await status_publisher.send_heartbeat({"state": f"updating to {commit}"})
     await run(f"broccoli-update {commit}")
 
 
 async def update_required_software(status_publisher):
-    status_publisher.send_heartbeat({"state": "updating software"})
-    status_publisher.send_heartbeat({"state": "updates complete"})
+    await status_publisher.send_heartbeat({"state": "updating software"})
+    await status_publisher.send_heartbeat({"state": "updates complete"})
