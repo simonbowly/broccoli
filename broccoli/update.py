@@ -12,8 +12,9 @@ run = functools.partial(subprocess.check_call, shell=True)
 @click.argument("commit")
 def update(commit):
     run("git fetch", cwd="/usr/local/src/broccoli")
-    run(f"git checkout {commit}", cwd="/usr/local/src/broccoli")
-    run("pip3 install broccoli", cwd="/usr/local/src/broccoli")
+    run("git checkout master", cwd="/usr/local/src/broccoli")
+    run(f"git reset --hard {commit}", cwd="/usr/local/src/broccoli")
+    run("pip3 install /usr/local/src/broccoli --upgrade")
     shutil.copy(
         "/usr/local/src/broccoli/broccoli.service",
         "/etc/systemd/system/broccoli.service",
