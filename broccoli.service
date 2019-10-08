@@ -1,0 +1,12 @@
+[Unit]
+Description=Broccoli Node
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=no
+ExecStart=broccoli-node tcp://192.168.1.101:4444 tcp://192.168.1.101:5555
+
+[Install]
+WantedBy=multi-user.target
