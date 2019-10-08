@@ -20,7 +20,7 @@ def update(commit):
     )
     os.makedirs("/etc/broccoli", exist_ok=True)
     run(
-        "git show | head -n 1 | sed 's|commit ||' >> /etc/broccoli/githash",
+        "git show | head -n 1 | sed 's|commit ||' > /etc/broccoli/githash",
         cwd="/usr/local/src/broccoli",
     )
     run("systemctl daemon-reload")
