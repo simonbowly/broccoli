@@ -22,6 +22,7 @@ Node behaviour:
 import asyncio
 import logging
 import pathlib
+import subprocess
 
 import click
 import msgpack
@@ -41,12 +42,10 @@ def restore_to_idle(current_state=None):
         "commit": current_state["commit"]
         if current_state
         else pathlib.Path("/etc/broccoli/githash").read_text().strip(),
-        "job_queue": [],
         "task": {"name": "idle", "kwargs": {}},
     }
     current_state = {
         "commit": required_state["commit"],
-        "last_job": current_state["last_job"] if current_state else None,
         "task": {"name": "idle", "kwargs": {}},
     }
     task = tasks.launch_task(**required_state["task"])
@@ -57,10 +56,19 @@ class StatusPublisher:
     def __init__(self, context, address):
         self.socket = context.socket(zmq.PUB)
         self.socket.connect(address)
+        self.ip_address = (
+            subprocess.check_output(
+                r"ifconfig | sed -nE 's| *inet (192.168[0-9\.]+).*|\1|p'", shell=True
+            )
+            .decode()
+            .strip()
+        )
 
     async def send_heartbeat(self, current_state):
         logger.info("sending heartbeat")
-        await self.socket.send(msgpack.packb(current_state))
+        await self.socket.send(
+            msgpack.packb(dict(current_state, ip_address=self.ip_address))
+        )
 
     async def report_error(self, err):
         logger.exception(err)
