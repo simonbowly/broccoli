@@ -1,4 +1,5 @@
 import asyncio
+import subprocess
 import zmq
 
 
@@ -28,3 +29,28 @@ def simple_subscriber(context, address):
     socket.setsockopt(zmq.SUBSCRIBE, b"")
     socket.connect(address)
     return socket
+
+
+async def check(p, cmd):
+    retcode = await p.wait()
+    if retcode:
+        raise subprocess.CalledProcessError(retcode, cmd)
+
+
+async def run(cmd, *args, cwd=None):
+    """
+    Behaves like subprocess.check_call. Raises subprocess.CalledProcessError
+    for nonzero return codes, and FileNotFoundError if the command is not
+    runnable.
+    """
+    p = await asyncio.create_subprocess_exec(cmd, *args, cwd=cwd)
+    await check(p, (cmd,) + args)
+
+
+async def run_shell(cmd, cwd=None):
+    """
+    Behaves like subprocess.check_call(cmd, shell=True).
+    Raises subprocess.CalledProcessError for nonzero return codes.
+    """
+    p = await asyncio.create_subprocess_shell(cmd, cwd=cwd)
+    await check(p, cmd)

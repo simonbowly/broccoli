@@ -26,6 +26,7 @@ import subprocess
 
 import click
 import msgpack
+import psutil
 import zmq.asyncio
 
 from . import jobs
@@ -52,6 +53,23 @@ def restore_to_idle(current_state=None):
     return required_state, current_state, task
 
 
+def get_resources():
+    return {
+        "cpu_count": psutil.cpu_count(),
+        "cpu_freq": dict(psutil.cpu_freq()._asdict()),
+        "cpu_percent": psutil.cpu_percent(),
+        "processes": [
+            {
+                "pid": child.pid,
+                "status": child.status(),
+                "cmdline": child.cmdline(),
+                "mem_percent": child.memory_percent(),
+            }
+            for child in psutil.Process().children(recursive=True)
+        ],
+    }
+
+
 class StatusPublisher:
     def __init__(self, context, address):
         self.socket = context.socket(zmq.PUB)
@@ -67,7 +85,11 @@ class StatusPublisher:
     async def send_heartbeat(self, current_state):
         logger.info("sending heartbeat")
         await self.socket.send(
-            msgpack.packb(dict(current_state, ip_address=self.ip_address))
+            msgpack.packb(
+                dict(
+                    current_state, ip_address=self.ip_address, resources=get_resources()
+                )
+            )
         )
 
     async def report_error(self, err):
@@ -80,7 +102,7 @@ async def run(context, control_address, status_address):
     status_publisher = StatusPublisher(context, status_address)
     await asyncio.sleep(1)
     # Get all external software up to date and kick off the idle task.
-    await jobs.update_required_software(status_publisher)
+    await jobs.update_required_software(status_publisher.send_heartbeat)
     required_state, current_state, task = restore_to_idle()
     while True:
         # Update and restart if a version change is indicated.
