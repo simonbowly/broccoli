@@ -1,7 +1,8 @@
 """
 Self updating script. Assumes repo is cloned at /usr/local/src/broccoli and
 can be fetched + checked-out to the given commit. Overwrites service source
-files from the repo and restarts the service.
+files from the repo and restarts the service. Also assumes /usr/local/bin/pip
+points to the root python3 installation.
 """
 
 import functools
@@ -20,8 +21,8 @@ def update(commit):
     run("git fetch", cwd="/usr/local/src/broccoli")
     run("git checkout master", cwd="/usr/local/src/broccoli")
     run(f"git reset --hard {commit}", cwd="/usr/local/src/broccoli")
-    run("pip3 install -r /usr/local/src/broccoli/requirements.txt")
-    run("pip3 install /usr/local/src/broccoli --upgrade")
+    run("/usr/local/bin/pip install -r /usr/local/src/broccoli/requirements.txt")
+    run("/usr/local/bin/pip install /usr/local/src/broccoli --upgrade")
     shutil.copy(
         "/usr/local/src/broccoli/broccoli.service",
         "/etc/systemd/system/broccoli.service",

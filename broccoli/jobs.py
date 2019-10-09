@@ -16,11 +16,11 @@ async def update_and_restart(commit, status_publisher):
 
 
 async def apt_update():
-    await run("apt-get update")
+    await run("apt-get update -q")
 
 
 async def apt_install(*packages):
-    await run("apt-get install -y " + " ".join(packages))
+    await run("apt-get install -q -y " + " ".join(packages))
 
 
 async def update_required_software(status_publisher):
