@@ -1,7 +1,8 @@
 
-# Broccoli: Bowly's Rather Ordinary Computing Cluster for Obviating a Little Iciness
+# Broccoli: Brilliantly Recalcitrant Ordinary Computing Cluster for Obviating a Little Iciness
 
 *Yes, I used github's name generator (which spat out potential-broccoli) and then really had to reach for the backronym.*
+*Only now I've really leaned into it and the project has roots, stalks and florets...*
 
 So I've built a heater for my living room by collecting some old desktop computers and having them run computationally intensive tasks to generate heat.
 I figured I run a lot of optimisation engines to test their performance, and they can either be run in a data centre, which then needs to be cooled as a result, or they can be run in my living room, which needed a little heating anyway.
@@ -15,8 +16,7 @@ Each machine in the cluster is running Xen hypervisor.
 The worker nodes (3 x old Core2 quad desktops) each have a single paravirtualised ubuntu guest OS using all their resources.
 Xen is handy as a middle layer here so I can overwrite/update the guest OS remotely without having to go plug a screen into each machine.
 
-The supervising node (old laptop) also runs Xen, hosting a few small services to control the other nodes and serve code repositories and archives to avoid too much back and forth to the internet.
-The supervision services themselves shouldn't need much grunt, so I may also run a worker guest on the laptop.
+The supervising node (old laptop) also runs Xen, hosting a few small services to control the other nodes and serve code repositories and archives to avoid too much back and forth to the internet (also serves the install script so that the setup command below works).
 
 ## Software Architecture
 
@@ -27,6 +27,6 @@ The core component is a worker node service which:
 
 ## Service Setup
 
-Just run this!
+Just run this on the nodes...
 
     curl -fsSL http://192.168.1.101/source/install-broccoli.sh | bash

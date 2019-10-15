@@ -1,35 +1,40 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import io
-import os
+import pathlib
+import subprocess
 
 from setuptools import find_packages, setup
 
-# Import the README and use it as the long-description.
-# Note: this will only work if 'README.md' is present in your MANIFEST.in file!
-here = os.path.abspath(os.path.dirname(__file__))
-try:
-    with io.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
-        long_description = "\n" + f.read()
-except FileNotFoundError:
-    long_description = DESCRIPTION
+here = pathlib.Path(__file__).parent
+
+# Write the version.py file. This requires installation from the repo directly.
+githash = (
+    subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=here).decode().strip()
+)
+if subprocess.check_output(["git", "diff"], cwd=here).decode().strip():
+    githash = githash + "-mod"
+with open(here / "broccoli/version.py", "w") as version_file:
+    version_file.write(f'BROCCOLI_GITHASH = "{githash}"\n')
 
 setup(
     name="broccoli",
     version="0.1.0",
     description="Rather Ordinary Computing Cluster",
-    long_description=long_description,
+    # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
+    long_description="\n" + (here / "README.md").read_text(),
     long_description_content_type="text/markdown",
     author="Simon Bowly",
     author_email="simon.bowly@gmail.com",
     python_requires=">=3.7.0",
     url="simonbowly/broccoli",
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
-    entry_points={"console_scripts": [
-        "broccoli-node=broccoli.node:cli",
-        "broccoli-update=broccoli.update:update",
-        ]},
+    entry_points={
+        "console_scripts": [
+            "broccoli-node=broccoli.node:cli",
+            "broccoli-update=broccoli.update:update",
+        ]
+    },
     install_requires=["click", "pyzmq", "msgpack"],
     include_package_data=True,
     license="MIT",

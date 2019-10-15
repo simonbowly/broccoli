@@ -1,4 +1,5 @@
 Click>=7.0
 msgpack>=0.6.1
 psutil>=5.6.3
+pyrsistent>=0.15.4
 pyzmq>=18.1.0

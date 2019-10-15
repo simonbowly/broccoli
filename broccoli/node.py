@@ -103,6 +103,9 @@ async def run(context, control_address, status_address):
     await asyncio.sleep(1)
     # Get all external software up to date and kick off the idle task.
     await jobs.update_required_software(status_publisher.send_heartbeat)
+    # TODO if we get an error here, then report and update_and_restart back to origin/base?
+    # origin/base should be a commit with an empty/dummy update_required_software
+    # function so that the service always starts?
     required_state, current_state, task = restore_to_idle()
     while True:
         # Update and restart if a version change is indicated.

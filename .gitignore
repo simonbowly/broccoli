@@ -43,3 +43,6 @@ coverage.xml
 
 # Sublime project
 *.sublime-workspace
+
+# Version file set at setup.py time
+broccoli/version.py

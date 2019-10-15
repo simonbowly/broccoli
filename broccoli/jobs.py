@@ -110,8 +110,9 @@ async def install(program, version, installed):
     return installed
 
 
-# Really need to read into cancellation here...
-
+# TODO Really need to read into cancellation here...
+# Maybe better to reverse this? Run the status reporter as
+# background, cancel it in finally block?
 
 async def do_while_reporting(task, send_status, status):
     while True:
