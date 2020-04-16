@@ -1,6 +1,8 @@
 
 # Broccoli: Brilliantly Recalcitrant Ordinary Computing Cluster for Obviating a Little Iciness
 
+**Broccoli: Building a Rather Old Compute Cluster (and Obviating a Little Iciness)**
+
 *Yes, I used github's name generator (which spat out potential-broccoli) and then really had to reach for the backronym.*
 *Only now I've really leaned into it and the project has roots, stalks and florets...*
 
